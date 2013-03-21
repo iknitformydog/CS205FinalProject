@@ -1,172 +1,134 @@
+import javax.swing.*;
 
-//Peter Crosby
-
-
-public class Card {
-
-
-	public String count;
-	public String type;
+public class Card
+{
+	private String type;
+	private char index;
+	private String pictureName;
 	
-	public String power;
+	public Card(String type, char index, String pictureName)
+	{
+		setType(type);
+		setIndex(index);
+		setPictureName(pictureName);
+	}
 	
-/*********************************/	
-/**
-	method gets count of a card.
-**/
-	public String getCount(){
-		
-		return count;
-	}//getSuit
+	/**
+		Method sets the card's type
+		@param The card's type
+	*/
 	
-/*********************************/
-/**
-	method sets count of a card.
-	@param suitIn 
-**/	
-	public void setCount(String countIn){
+	public void setType(String type)
+	{
+		this.type = type;
+	}
 	
-		this.count=countIn;
-	}//setSuit
-
-/*********************************/
-/**
-	method gets rank of the card.
-**/
-	public String getType(){
+	/**
+		Method returns the card's type
+		@return The card's type
+	*/
 	
+	public String getType()
+	{
 		return type;
-	}//getRank
-/*********************************/
-/**
-	method gets power of the card.
-**/
-	public String getPower(){
+	}
 	
-		return power;
-	}//getRank
-/*********************************/
-/**
-	method gets rank of the card.***************************  Returns integer value
-**/
-	public int getIntRank(){
-		int rankInt=Integer.parseInt(type);
-		return rankInt;
-	}//getRank
-
-/*********************************/
-/**
-	method sets the rank of a car.
-	@param rankIn
-**/
-
-	public void setType(String typeIn){
+	/**
+		Method sets the card's index
+		@param The card's index
+	*/
 	
-		this.type=typeIn;
-	}//setRank
-/*********************************/
-/**
-	method sets the rank of a car.
-	@param rankIn
-**/
-
-	public void setPower(String powerIn){
+	public void setIndex(char index)
+	{
+		this.index = index;
+	}
 	
-		this.power=powerIn;
-	}//setRank
-
-
-/*********************************/
-/**
-	method gets rank and suit of card.
-**/
-	public String getCardInfo(){
+	/**
+		Method returns the card's index
+		@return The card's index
+	*/
 	
-			
-		return getType()+getCount();
-	}//getCardInfo
-
-/*********************************/
-/**
-	method sends card info toString.
-**/
-	public String toString(){
-
-
-		return getType()+getCount();
-	}//toString
-
-/*********************************/
-/**
-	method checks if two cards are equal.
-	@param cardX -card to be checked
-**/
-	public boolean equals(Card cardX){
+	public char getIndex()
+	{
+		return index;
+	}
 	
-		if (type==cardX.getType() && count==cardX.getCount())
+	/**
+		Method sets the card's picture name
+		@param The card's picture name
+	*/
+	
+	public void setPictureName(String pictureName)
+	{
+		this.pictureName = pictureName;
+	}
+	
+	/**
+		Method returns the card's picture name
+		@return The card's picture name
+	*/
+	
+	public String getPictureName()
+	{
+		return pictureName;
+	}
+	
+	/**
+		Method returns the card's value
+		@return The card's value if the card is a cat or rat card
+		@return -1 if the card is a power card
+	*/
+	
+	public int getValue()
+	{
+		if(isPowerCard())
+		{
+			return -1;
+		}
+		else
+		{
+			return (Integer.parseInt(type));
+		}
+	}
+	
+	/**
+		Method returns a boolean value indicating whether the card is a power card
+		@return true if the card is a power card
+		@return false if the card is not a power card
+	*/
+	
+	public boolean isPowerCard()
+	{
+		if(type.equals("pick2") || type.equals("swap") || type.equals("peek"))
+		{
 			return true;
-		return false;
-	}//equals
-
-/*************constructor********************/
-/**
-	Constructor of a new Card object based on parameters rankIn and suitIn.
-	@param typeIn -desired type
-	@param suitIn -desired suit
-**/
-	public Card(String typeIn,String countIn){
-		setType(typeIn);
-		setCount(countIn);
-	
-	}//constructor
-
-/*************power card constructor********************/
-/**
-	Constructor of a new Card object based on parameter power.
-	@param powerIn -desired powerIn
-	@
-**/
-	public Card(String powerIn){
-		setPower(powerIn);
+		}
+		else
+		{
+			return false;
+		}
+	}
 		
+	/**
+		Method returns the card's picture as an ImageIcon
+		@return The card's picture
+	*/
 	
-	}//constructor
-/*********************************/
-	public static void main(String[] args){
-
-		String rank0="0";
-		int score;
-		String rank1="1";
-		String rank2="2";
-		String rank8="8";
-		String rank9="9";
-		String pick="pick2";
-		String swap="swap";
-		String peek="peek";
-		//card 1 
-		Card card1=new Card(rank1,"A");
-		System.out.println(card1);
-
-		//card2
-		Card card2=new Card(rank2,"C");
-		System.out.println(card2);
-
-
-		//card3
-		Card card3=new Card(rank8,"D");
-		System.out.println(card3);
-
-		//powerCard pick2
-		Card cardPick2=new Card(pick,"B");
-		System.out.println(cardPick2);		
-		//powerCard swap
-		Card cardSwap=new Card(swap,"B");
-		System.out.println(cardSwap);
-		//powerCard peek
-		Card cardPeek=new Card(peek,"B");
-		System.out.println(cardPeek);
-		
-	}//main	
+	public ImageIcon getCardImage()
+	{
+		return new ImageIcon(pictureName);
+	}
 	
+	/**
+		Method returns the state of the card as a String
+		@return The card's state
+	*/
 	
+	public String toString()
+	{
+		StringBuilder card = new StringBuilder();
+		card.append(type);
+		card.append(index);
+		return card.toString();
+	}
 }
