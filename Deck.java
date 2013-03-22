@@ -65,7 +65,9 @@ public class Deck {
 					if(b==8)
 						count=count9;
 					
-					Card cardInDeck=new Card(type,count);
+               //////This needs to send in a String pictureName
+               ////to the Card constructor
+					Card cardInDeck=new Card(type,count,"cards/0A.gif");
 					cardDeck.add(cardInDeck);		
 				}//for
 			}//if
