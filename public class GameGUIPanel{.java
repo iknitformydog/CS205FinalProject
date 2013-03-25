@@ -10,6 +10,7 @@ public class GameGUIPanel{
 	send info to gameInfo
 	initialize PlayerPanelHuman
 	initialize PlayerPanelAI
-	Initialize DeckPanel
+	initialize DeckPanel
+	intialize ScorePanel
 
 }
