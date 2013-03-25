@@ -2,15 +2,21 @@ import javax.swing.*;
 
 public class Card
 {
+	public final static String PICK_2 = "pick2";
+	public final static String SWAP = "swap";
+	public final static String PEEK = "peek";
+	
 	private String type;
 	private char index;
 	private String pictureName;
+	private boolean flagged;
 	
 	public Card(String type, char index, String pictureName)
 	{
 		setType(type);
 		setIndex(index);
 		setPictureName(pictureName);
+		flagged = false;
 	}
 	
 	/**
@@ -99,7 +105,7 @@ public class Card
 	
 	public boolean isPowerCard()
 	{
-		if(type.equals("pick2") || type.equals("swap") || type.equals("peek"))
+		if(type.equals(PICK_2) || type.equals(SWAP) || type.equals(PEEK))
 		{
 			return true;
 		}
@@ -107,6 +113,36 @@ public class Card
 		{
 			return false;
 		}
+	}
+	
+	/**
+		Method creates a flag to illistrate that the card has been seen
+	*/
+	
+	public void flagCard()
+	{
+		flagged = true;
+	}
+	
+	/**
+		Method removes a flag from a card
+	*/
+	
+	public void removeFlag()
+	{
+		flagged = false;
+	}
+	
+	
+	/**
+		Method returns a boolean value indicating whether a card has been seen by the computer
+		@return true If the card has been flagged
+		@return false If the card has not been flagged
+	*/
+	
+	public boolean isFlagged()
+	{
+		return flagged;
 	}
 		
 	/**
