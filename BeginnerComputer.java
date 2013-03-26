@@ -1,15 +1,25 @@
 public class BeginnerComputer extends Computer
 {
-	private final static double DECK_EXPECTED_VALUE = 5.0;
-	private final static double PROB_OF_RAT_A_TAT_CAT = 0.1;
-	private final static int NUM_TURNS_BEFORE_RAT_A_TAT_CAT = 3;
-	private final static double PROB_OF_FORGET_CARD = 0.5;
-	private int turn;
+	private final static double DECK_EXPECTED_VALUE = 5.0;  //fixed expected value of the deck
+	
+	private final static double PROB_OF_RAT_A_TAT_CAT = 0.1;  //fixed probability that computer will declare Rat-A-Tat-Cat
+	
+	private final static int NUM_TURNS_BEFORE_RAT_A_TAT_CAT = 3;  //number of turns before comptuer will consider
+	//declaring Rat-A-Tat-Cat
+	
+	private final static double PROB_OF_FORGET_CARD = 0.5;  //probabilty that the computer will forget a card previously
+	//memorized in its hand (card's value will return to null)
+	
+	private int turn;  //computer's turn number
+	
+	/**
+		Constructor creates an instance of BeginnerComputer
+	*/
 	
 	public BeginnerComputer()
 	{
-		super();
-		turn = 1;
+		super();  //call Computer superclass
+		turn = 1;  //initialize turn number to 1
 	}
 	
 	/**
@@ -19,7 +29,10 @@ public class BeginnerComputer extends Computer
 	
 	private void forgetCards()
 	{
-		Card[] computerHand = getHandMemory();
+		Card[] computerHand = getHandMemory();  //computer's hand memory
+		
+		//for every card in the computer's hand memory, there is fixed probability that the card's value will return to null
+		
 		for(int i = 0 ; i < Hand.NUM_CARDS ; i++)
 		{
 			if(Math.random() < PROB_OF_FORGET_CARD)
@@ -40,6 +53,9 @@ public class BeginnerComputer extends Computer
 	
 	public int choosePile(Deck deck, boolean finalTurn)
 	{
+		//if the human did not declare Rat-A-Tat-Cat on previous turn and there have been a certain number of turns,
+		//the computer will randomly consider declaring Rat-A-Tat-Cat
+		
 		if(!finalTurn && turn > NUM_TURNS_BEFORE_RAT_A_TAT_CAT)
 		{
 			if(Math.random() < PROB_OF_RAT_A_TAT_CAT)
@@ -47,8 +63,10 @@ public class BeginnerComputer extends Computer
 				return Game.RAT_A_TAT_CAT;
 			}
 		}
-		forgetCards();
-		return getPile(deck, DECK_EXPECTED_VALUE);
+		
+		forgetCards();  //randomly forget cards in its hand memory
+		
+		return getPile(deck, DECK_EXPECTED_VALUE);  //return the pile (draw or discard) that the computer would like to take a card from
 	}
 	
 	/**
@@ -60,8 +78,8 @@ public class BeginnerComputer extends Computer
 	
 	public int chooseMove(Deck deck, int choice)
 	{
-		turn++;
-		return getMove(deck, choice, DECK_EXPECTED_VALUE);
+		turn++;  //increase turn counter by 1
+		return getMove(deck, choice, DECK_EXPECTED_VALUE);  //return the computer's move (as an integer)
 	}
 	
 	/**
@@ -72,7 +90,7 @@ public class BeginnerComputer extends Computer
 	
 	public void recordHumanSwap(int computerIndex, int humanIndex)
 	{
-		setCompMemory(computerIndex, null);
+		setCompMemory(computerIndex, null);  //update computer's hand memory after human swaps with 1 of its cards
 	}
 	
 	/**
@@ -84,7 +102,7 @@ public class BeginnerComputer extends Computer
 	
 	public DrawTwo draw2(Deck deck, Player opponent)
 	{
-		return super.draw2(deck, opponent);
+		return super.draw2(deck, opponent);  //call superclass's draw 2 method and return DrawTwo object keeping track of what occurred during turn
 	}
 	
 	/**
@@ -95,11 +113,13 @@ public class BeginnerComputer extends Computer
 	
 	public Swap swap(Player opponent)
 	{
-		int computerCard = getHighestValuedCard(DECK_EXPECTED_VALUE);
-		int opponentCard = (int)(Math.random() * Hand.NUM_CARDS);
-		swapWithOpponent(opponent, opponentCard, computerCard);
-		setCompMemory(computerCard, null);
-		return new Swap(computerCard, opponentCard);
+		int computerCard = getHighestValuedCard(DECK_EXPECTED_VALUE);  //index of the highest valued card in computer's hand
+		int opponentCard = (int)(Math.random() * Hand.NUM_CARDS);  //index of a random card in human's hand
+		
+		swapWithOpponent(opponent, opponentCard, computerCard);  //swap computer's card with human's card
+		setCompMemory(computerCard, null);  //update computer's hand memory
+		
+		return new Swap(computerCard, opponentCard);  //return Swap object keeping track of what occurred during swap
 	}
 	
 	/**
@@ -110,7 +130,7 @@ public class BeginnerComputer extends Computer
 	
 	public int peek()
 	{
-		return super.peek();
+		return super.peek();  //return index of card computer would like to peek at or -1 if computer did peek at a card
 	}
 	
 	/**
@@ -122,6 +142,9 @@ public class BeginnerComputer extends Computer
 	
 	public boolean useSwap()
 	{
+		//if the highest valued card in the computer's hand is greater than or equal to the deck's expected value,
+		//use the Swap card
+		
 		if(getHighestValuedCard(DECK_EXPECTED_VALUE) >= DECK_EXPECTED_VALUE)
 		{
 			return true;
@@ -141,6 +164,8 @@ public class BeginnerComputer extends Computer
 	
 	public boolean usePeek()
 	{
+		//use peek card if the computer does not know the value of card in its hand
+		
 		return super.usePeek();
 	}
 

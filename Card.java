@@ -2,21 +2,28 @@ import javax.swing.*;
 
 public class Card
 {
-	public final static String PICK_2 = "pick2";
-	public final static String SWAP = "swap";
-	public final static String PEEK = "peek";
+	public final static String PICK_2 = "pick2";  //textual representation of a draw 2 card
+	public final static String SWAP = "swap";  //textual representation of a swap card
+	public final static String PEEK = "peek";  //textual representation of a peek card
 	
-	private String type;
-	private char index;
-	private String pictureName;
-	private boolean flagged;
+	private String type;  //the card's rank (Ex. 0-9, pick2, swap, or peek)
+	private char index;  //the card's index (distinguish among cards of the same rank)
+	private String pictureName;  //the name of the card's image file
+	private boolean flagged;  //boolean value indicating whether a card has been flagged (only used by AdvancedComputer)
+	
+	/**
+		Constructor creates a new Card object
+		@param type The card's rank
+		@param index The card's index
+		@param The card's picture name
+	*/
 	
 	public Card(String type, char index, String pictureName)
 	{
-		setType(type);
-		setIndex(index);
-		setPictureName(pictureName);
-		flagged = false;
+		setType(type);  //record the card's rank
+		setIndex(index);  //record the card's index
+		setPictureName(pictureName);  //record the card's picture name
+		flagged = false;  //card has not yet been flagged (seen by AdvancedComputer)
 	}
 	
 	/**

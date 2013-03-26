@@ -1,11 +1,16 @@
 public class IntermediateComputer extends Computer
 {
-	private final static double DECK_EXPECTED_VALUE = 5;
-	private final static double MIN_HAND_VALUE = 10.0;
+	private final static double DECK_EXPECTED_VALUE = 5;  //fixed expected value of the deck
+	
+	private final static double MIN_HAND_VALUE = 10.0;  //the computer's minimum hand value before it declares Rat-A-Tat-Cat
+	
+	/**
+		Constructor creates a new instance of IntermediateComputer
+	*/
 	
 	public IntermediateComputer()
 	{
-		super();
+		super();  //call to Computer superclass
 	}
 	
 	/**
@@ -20,6 +25,10 @@ public class IntermediateComputer extends Computer
 	
 	public int choosePile(Deck deck, boolean finalTurn)
 	{
+		//if the human has not declared Rat-A-Tat-Cat during previous turn and computer's expected hand value
+		//is less than MIN_HAND_VALUE, return integer indicating that computer would like to declare Rat-A-Tat-Cat
+		//otherwise, return an integer indicating the pile (draw or discard) that computer would like to take card from
+		
 		if(!finalTurn && getHandValue(DECK_EXPECTED_VALUE) < MIN_HAND_VALUE)
 		{
 			return Game.RAT_A_TAT_CAT;
@@ -39,7 +48,7 @@ public class IntermediateComputer extends Computer
 	
 	public int chooseMove(Deck deck, int choice)
 	{
-		return getMove(deck, choice, DECK_EXPECTED_VALUE);
+		return getMove(deck, choice, DECK_EXPECTED_VALUE);  //the computer's move (as an integer)
 	}
 	
 	/**
@@ -50,7 +59,7 @@ public class IntermediateComputer extends Computer
 	
 	public void recordHumanSwap(int computerIndex, int humanIndex)
 	{
-		setCompMemory(computerIndex, null);
+		setCompMemory(computerIndex, null);  //update computer memory after human swaps with one of its cards
 	}
 	
 	/**
@@ -62,7 +71,7 @@ public class IntermediateComputer extends Computer
 	
 	public DrawTwo draw2(Deck deck, Player opponent)
 	{
-		return super.draw2(deck, opponent);
+		return super.draw2(deck, opponent);  //call superclass's draw2 method and return DrawTwo object
 	}
 	
 	/**
@@ -73,11 +82,11 @@ public class IntermediateComputer extends Computer
 	
 	public Swap swap(Player opponent)
 	{
-		int computerCard = getHighestValuedCard(DECK_EXPECTED_VALUE);
-		int opponentCard = (int)(Math.random() * Hand.NUM_CARDS);
-		swapWithOpponent(opponent, opponentCard, computerCard);
-		setCompMemory(computerCard, null);
-		return new Swap(computerCard, opponentCard);
+		int computerCard = getHighestValuedCard(DECK_EXPECTED_VALUE);  //index of computer's highest valued card
+		int opponentCard = (int)(Math.random() * Hand.NUM_CARDS);  //randomly selected index for a human card
+		swapWithOpponent(opponent, opponentCard, computerCard);  //swap computer's card with human's card
+		setCompMemory(computerCard, null);  //update computer's memorized hand after swap
+		return new Swap(computerCard, opponentCard);  //return Swap object keeping track of what cards were swapped
 	}
 	
 	/**
@@ -88,7 +97,7 @@ public class IntermediateComputer extends Computer
 	
 	public int peek()
 	{
-		return super.peek();
+		return super.peek();  //call superclass's peek method and return index of card peeked at
 	}
 	
 	/**
@@ -100,6 +109,10 @@ public class IntermediateComputer extends Computer
 	
 	public boolean useSwap()
 	{
+		//if the highest valued card in the computer's memorized hand is greater than the expected value of the deck,
+		//use the swap card if picked as the first card of a draw 2 turn
+		//otherwise do not use the swap card and draw another card
+	
 		if(getHighestValuedCard(DECK_EXPECTED_VALUE) >= DECK_EXPECTED_VALUE)
 		{
 			return true;
@@ -119,7 +132,7 @@ public class IntermediateComputer extends Computer
 	
 	public boolean usePeek()
 	{
-		return super.usePeek();
+		return super.usePeek();  //return boolean value indicating whether computer should use peek card if picked during a draw 2 turn
 	}
 
 }

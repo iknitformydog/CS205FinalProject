@@ -1,7 +1,12 @@
 public abstract class Player
 {
-	private String name;
-	private Hand hand;
+	private String name;  //The player's name
+	private Hand hand;  //The player's hand
+	
+	/**
+		Constructor instantiates a new player
+		@param name The player's name
+	*/
 	
 	public Player(String name)
 	{
@@ -50,8 +55,12 @@ public abstract class Player
 	
 	public void makeMove(Deck deck, int choice, int move)
 	{
-		Card newCard;
-		Card oldCard;
+		Card newCard;  //card to be added to hand
+		Card oldCard;  //card to be removed from hand
+		
+		//if player takes card from draw pile, newCard will be top card in draw pile
+		//if player takes card from discard pile, newCard will be top card in discard pile
+		
 		if(choice == Game.DRAW_PILE)
 		{
 			newCard = deck.removeTopDraw();
@@ -60,6 +69,10 @@ public abstract class Player
 		{
 			newCard = deck.removeTopDiscard();
 		}
+		
+		//if player chooses to place card back in discard pile, place card in discard pile
+		//if player would like to swap card with a card in its hand, perform swap and place old card in discard pile
+		
 		if(move == Game.PLACE_IN_DISCARD)
 		{
 			deck.addToDiscard(newCard);
@@ -81,9 +94,9 @@ public abstract class Player
 	
 	public void swapWithOpponent(Player opponent, int opponentIndex, int playerIndex)
 	{
-		Card card = hand.getCard(playerIndex);
-		hand.swapCard((opponent.hand).getCard(opponentIndex), playerIndex);
-		(opponent.hand).swapCard(card, opponentIndex);
+		Card card = hand.getCard(playerIndex);  //card in player's hand that would like to be swapped
+		hand.swapCard((opponent.hand).getCard(opponentIndex), playerIndex);  //place card in opponent's hand in player's hand at specified indicies
+		(opponent.hand).swapCard(card, opponentIndex);  //place card in player's hand in opponent's hand at specified indicies
 	}
 	
 	/**
@@ -114,7 +127,11 @@ public abstract class Player
 	
 	public void replacePowerCards(Deck deck)
 	{
-		Card card;
+		Card card;  //card object to temporarily hold card during transfer
+		
+		//for every card in player's hand, check to see if card is a power card
+		//if it is a power card, swap it with a card in the draw pile
+		
 		for(int i = 0 ; i < Hand.NUM_CARDS ; i++)
 		{
 			card = hand.getCard(i);

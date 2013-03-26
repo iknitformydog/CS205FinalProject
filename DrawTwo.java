@@ -1,7 +1,7 @@
 public class DrawTwo
 {
-	private Move move1;
-	private Move move2;
+	private Move move1;  //Move object to keep track of first move of a draw 2 turn
+	private Move move2;  //Move object to keep track of a second move of a draw 2 turn
 	
 	/**
 		Constructor for when the computer picks a card and discards it

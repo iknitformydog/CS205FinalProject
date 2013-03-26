@@ -1,11 +1,11 @@
 public class Move
 {
-	private Card oldCard;
-	private Card newCard;
-	private DrawTwo turn;
-	private Swap swap;
-	private int peek;
-	private int move;
+	private Card oldCard;  //card removed from hand during move (null if no card removed from hand)
+	private Card newCard;  //card picked from draw pile during move
+	private DrawTwo turn;  //DrawTwo object for when draw 2 card is picked during move (null if another draw 2 is not picked)
+	private Swap swap;  //Swap object for when a swap card is used during move (null if a swap card is not used)
+	private int peek;  //the index of the card peeked at for when a peek card is used during move (null if a peek card is not used)
+	private int move;  //integer representing the computer's move
 	
 	/**
 		Constructor for when the computer picks a card and discards it
@@ -154,5 +154,4 @@ public class Move
 	{
 		return move;
 	}
-	
 }

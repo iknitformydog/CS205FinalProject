@@ -2,29 +2,45 @@ import java.util.*;
 
 public class AdvancedComputer extends Computer
 {
-	private final static double RAT_A_TAT_CAT_PERCENT = 0.2;
-	private final static int NUM_VALUED_CARDS = 10;
-	private final static int[] NUM_CARDS = {4, 4, 4, 4, 4, 4, 4, 4, 4, 9};
+	private final static double RAT_A_TAT_CAT_PERCENT = 0.2;  //the minimum percent lower than the human
+	//expected hand value that the computer expected hand value has to be before the computer declares RAT-A-TAT-CAT
 	
-	private int[] memorizedDeck;
-	private Card[] humanHand;
+	private final static int NUM_VALUED_CARDS = 10;  //number of card ranks in the deck that have a numerical value (Ex. 0-9)
+	//includes Cat and Rat Cards (not power cards)
+	
+	private final static int[] NUM_CARDS = {4, 4, 4, 4, 4, 4, 4, 4, 4, 9};  //quantity of cards in deck at each numerical rank
+	//index of array represents the card value and the value at each index represents the number of cards with that value
+	
+	private int[] memorizedDeck;  //an array of size NUM_VALUED_CARDS that holds that number of valued cards (Ex. 0-9) in the
+	//deck that that have not been flagged (seen by the computer and recorded)
+	
+	private Card[] humanHand; 	//an array holding the cards that the human has in his/her hand
+	//if the computer does not know the card at an index, the card in represented as null
+	
+	/**
+		Constructor creates an instance of AdvancedComputer
+	*/
 	
 	public AdvancedComputer()
 	{
-		super();
-		memorizedDeck = new int[NUM_VALUED_CARDS];
-		loadMemorizedDeck();
-		humanHand = new Card[Hand.NUM_CARDS];
-		initializeHand(humanHand);
+		super();  //call to Computer superclass
+		
+		memorizedDeck = new int[NUM_VALUED_CARDS];  //initialize memorizedDeck array to size NUM_VALUED_CARDS
+		loadMemorizedDeck();  //inititalize memorizedDeck to same values as NUM_CARDS (start values before cards are flagged)
+		
+		humanHand = new Card[Hand.NUM_CARDS];  //initialize humanHand array
+		initializeHand(humanHand);  //initalize human hand memory to null for every card value
 	}
 	
 	/**
-		Method loads the memorized deck array (representing the number of
-		cards at each value remaining in the deck
+		Method loads the memorized deck array (representing the number of cards at each value remaining in the deck)
+		At start of game, computer has not yet flagged cards, so all valued cards will be represented
 	*/
 	
 	private void loadMemorizedDeck()
 	{
+		//for each card value of memorizedDeck, assign it the total number of cards of that rank in deck at start of game
+		
 		for(int i = 0 ; i < NUM_VALUED_CARDS ; i++)
 		{
 			memorizedDeck[i] = NUM_CARDS[i];
@@ -38,24 +54,41 @@ public class AdvancedComputer extends Computer
 	
 	private void reCreateMemorizedDeck(Deck deck)
 	{
-		loadMemorizedDeck();
-		ArrayList<Card> cards = deck.getAllCards();
-		Hand compHand = getHand();
-		Card card;
+		loadMemorizedDeck();  //re-initialize memorizedDeck to start values (assume no cards are flagged)
+		
+		ArrayList<Card> cards = deck.getAllCards();  //temporarily holds all cards in deck
+		
+		Hand compHand = getHand();  //the computer's hand
+		
+		Card card;  //card object to temporarily hold a returned card
+		
+		//for each card in the computer's hand, add it to the ArrayList holding all cards in deck	
+		
 		for(int i = 0 ; i < Hand.NUM_CARDS ; i++)
 		{
 			card = compHand.getCard(i);
 			cards.add(card);
 		}
+		
+		//for each card in the human's hand that the computer memorized, add it to the ArrayList holding all cards
+		
 		for(int i = 0 ; i < Hand.NUM_CARDS ; i++)
 		{
 			card = humanHand[i];
+			
+			//if computer does not know one of human's cards (card = null), do not add to ArrayList of all cards
+			
 			if(card != null)
 			{
 				cards.add(card);
 			}
 		}
-		int index;
+		
+		int index;  //temporarily holds the index of memorizedDeck (same as card value) to decrease number of cards by 1
+		
+		//for every card in ArrayList, check to see if it is flagged, and if flagged, record flag in memorizedDeck
+		//only cards that may be flagged will be cards that were in a player's hand after deck ran out of cards and was re-created
+				
 		for(int i = 0 ; i < cards.size() ; i++)
 		{
 			card = cards.get(i);
@@ -73,11 +106,13 @@ public class AdvancedComputer extends Computer
 	
 	public void checkOuterCards()
 	{
-		super.checkOuterCards();
-		Card card1 = getCardFromMemory(Game.CARD_1);
-		recordCard(card1);
-		Card card2 = getCardFromMemory(Game.CARD_4);
-		recordCard(card2);
+		super.checkOuterCards();  //call superclass's method, which records cards in computer's hand memory
+		
+		Card card1 = getCardFromMemory(Game.CARD_1);  //get first memorized outer card
+		recordCard(card1);  //flag the card
+		
+		Card card2 = getCardFromMemory(Game.CARD_4);  //get second memorized outer card
+		recordCard(card2);  //flag the card
 		
 	}
 	
@@ -88,14 +123,18 @@ public class AdvancedComputer extends Computer
 	
 	private double getExpectedValue()
 	{
-		int sum = 0;
-		int numCards = 0;
+		int sum = 0;  //sum of all cards which are not flagged
+		int numCards = 0;  //number of cards which are not flagged
+		
+		//for every card value (0-9), calculate sum of unflagged cards and number of unflagged cards
+		
 		for (int i = 0 ; i < NUM_VALUED_CARDS ; i++)
 		{
 			sum = sum + (memorizedDeck[i] * i);
 			numCards = numCards + memorizedDeck[i];
 		}
-		return ((double)(sum)) / (numCards);
+		
+		return ((double)(sum)) / (numCards);  //return the average value of an unflagged card (expected value)
 	}
 	
 	/**
@@ -105,11 +144,13 @@ public class AdvancedComputer extends Computer
 	
 	public void recordCard(Card card)
 	{
+		//if card seen by computer is not a power card and is not already flagged, flag the card
+		
 		if(!card.isPowerCard() && !card.isFlagged())
 		{
-			card.flagCard();
-			int index = card.getValue();
-			memorizedDeck[index] = memorizedDeck[index] - 1;
+			card.flagCard();  //flag the card
+			int index = card.getValue();  //get the value of flagged card
+			memorizedDeck[index] = memorizedDeck[index] - 1;  //decrease number of unflagged cards of that value by 1
 		}
 	}
 	
@@ -124,13 +165,19 @@ public class AdvancedComputer extends Computer
 	
 	public int choosePile(Deck deck, boolean finalTurn)
 	{
+		//if the deck has been re-created during last turn, update flagged card memory
+		
 		if(deck.isNewDeck())
 		{
 			reCreateMemorizedDeck(deck);
 		}
 				
-		Card discard = deck.getTopDiscard();
-		recordCard(discard);
+		Card discard = deck.getTopDiscard();  //card currently in the discard pile
+		recordCard(discard);  //flag the card (since it is visible)
+		
+		//if the human did not declare Rat-A-Tat-Cat on last turn and computer wants to declare Rat-A-Tat-Cat,
+		//then declare Rat-A-Tat-Cat (return integer constant representing Rat-A-Tat-Cat)
+		//otherwise, return the pile (draw pile or discard pile) that computer would like to take a card from
 		
 		if(!finalTurn && declareRatATatCat())
 		{
@@ -151,13 +198,15 @@ public class AdvancedComputer extends Computer
 	
 	public int chooseMove(Deck deck, int choice)
 	{
+		//if computer chose draw pile, take the top card on draw pile and flag it
+		
 		if(choice == Game.DRAW_PILE)
 		{
 			Card draw = deck.getTopDraw();
 			recordCard(draw);
 		}
 
-		return getMove(deck, choice, getExpectedValue());
+		return getMove(deck, choice, getExpectedValue());  //return integer representing the computer's move
 	}
 	
 	/**
@@ -168,9 +217,10 @@ public class AdvancedComputer extends Computer
 	
 	public void recordHumanSwap(int computerIndex, int humanIndex)
 	{
-		Card humanCard = humanHand[humanIndex];
-		Card computerCard = setCompMemory(computerIndex, humanCard);
-		humanHand[humanIndex] = computerCard;
+		Card humanCard = humanHand[humanIndex];  //the card computer memorized in human's hand (or null if card is unknown)
+		Card computerCard = setCompMemory(computerIndex, humanCard);  //add human card to computer's card memory and return card 
+		//at that index in computer's hand
+		humanHand[humanIndex] = computerCard;  //add computer's swapped card to human's hand
 	}
 	
 	/**
@@ -181,7 +231,7 @@ public class AdvancedComputer extends Computer
 	
 	public void recordHumanMove(int index, Card card)
 	{
-		humanHand[index] = card;
+		humanHand[index] = card;  //records the card that human added to its hand at specified index
 	}
 	
 	/**
@@ -193,7 +243,7 @@ public class AdvancedComputer extends Computer
 	
 	public DrawTwo draw2(Deck deck, Player opponent)
 	{
-		return super.draw2(deck, opponent);
+		return super.draw2(deck, opponent);  //call superclass's draw2 method
 	}
 	
 	/**
@@ -204,15 +254,23 @@ public class AdvancedComputer extends Computer
 	
 	public Swap swap(Player opponent)
 	{
-		int computerCard = getHighestValuedCard(getExpectedValue());
-		int opponentCard = getLowestValuedCard(humanHand, getHumanExpectedValue());
+		int computerCard = getHighestValuedCard(getExpectedValue()); //index of computer card with the highest value
+		int opponentCard = getLowestValuedCard(humanHand, getHumanExpectedValue());  //index of human card with lowest value
+		
+		//if the highest valued card in computer's hand is greater than lowest valued card in human's hand, swap the cards
+		
 		if(getCardValue(computerCard, getExpectedValue()) > getCardValue(humanHand, opponentCard, getHumanExpectedValue()))
 		{
-			swapWithOpponent(opponent, opponentCard, computerCard);
-			Card card = setCompMemory(computerCard, humanHand[opponentCard]);
-			humanHand[opponentCard] = card;
-			return new Swap(computerCard, opponentCard);
+			swapWithOpponent(opponent, opponentCard, computerCard);  //swap cards with human
+			
+			Card card = setCompMemory(computerCard, humanHand[opponentCard]);  //record card taken from human and return card given to human
+			humanHand[opponentCard] = card;  //store old card in memorized human hand
+			
+			return new Swap(computerCard, opponentCard);  //return what happened during swap as Swap object
 		}
+		
+		//if computer decides not to swap, return Swap object with indicies as -1
+		
 		else
 		{
 			return new Swap(-1, -1);
@@ -227,12 +285,16 @@ public class AdvancedComputer extends Computer
 	
 	public int peek()
 	{
-		int index = super.peek();
+		int index = super.peek();  //index of card that computer would like to peek at
+		
+		//if the computer would like to peek, flag the card peeked at
+		
 		if(index != -1)
 		{
 			recordCard(getCardFromMemory(index));
 		}
-		return index;
+		
+		return index;  //return index of card peeked at or -1 if computer did not peek at any cards
 	}
 	
 	/**
@@ -243,8 +305,12 @@ public class AdvancedComputer extends Computer
 	
 	private boolean declareRatATatCat()
 	{
-		double computerHandValue = getHandValue(getExpectedValue());
-		double humanHandValue = getHandValue(humanHand, getHumanExpectedValue());
+		double computerHandValue = getHandValue(getExpectedValue());  //expected value of computer's hand
+		double humanHandValue = getHandValue(humanHand, getHumanExpectedValue());  //expected value of human's hand
+		
+		//if expected value of computer's hand is RAT_A_TAT_CAT_PECENT lower than expected value of human's hand,
+		//then declare RAT-A-TAT-CAT
+		
 		if(humanHandValue * (1 - RAT_A_TAT_CAT_PERCENT) > computerHandValue)
 		{
 			return true;
@@ -263,7 +329,7 @@ public class AdvancedComputer extends Computer
 	
 	private double getHumanExpectedValue()
 	{
-		return (getExpectedValue() / 2);
+		return (getExpectedValue() / 2);  //expected value of card in human's hand is half expected value of the deck
 	}
 	
 	/**
@@ -275,8 +341,11 @@ public class AdvancedComputer extends Computer
 	
 	public boolean useSwap()
 	{
-		int computerCard = getHighestValuedCard(getExpectedValue());
-		int opponentCard = getLowestValuedCard(humanHand, getExpectedValue());
+		int computerCard = getHighestValuedCard(getExpectedValue());  //index of highest valued card in computer's hand
+		int opponentCard = getLowestValuedCard(humanHand, getExpectedValue());  //index of lowest valued card in human's hand
+		
+		//if the highest valued card in computer's hand is higher than the lowest valued card in computer's hand, use Swap card
+		
 		if(getCardValue(computerCard, getExpectedValue()) > getCardValue(humanHand, opponentCard, getExpectedValue()))
 		{
 			return true;
@@ -296,6 +365,6 @@ public class AdvancedComputer extends Computer
 	
 	public boolean usePeek()
 	{
-		return super.usePeek();
+		return super.usePeek();  //use peek card is computer does not know value of every card in its hand
 	}
 }

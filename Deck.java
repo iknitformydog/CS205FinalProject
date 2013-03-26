@@ -2,19 +2,25 @@ import java.util.*;
 
 public class Deck
 {
-	public final static int TOTAL_NUM_CARDS = 54;
-	private ArrayList<Card> drawPile;
-	private ArrayList<Card> discardPile;
-	private boolean isNewDeck;
+	public final static int TOTAL_NUM_CARDS = 54;  //total number of cards in the deck
+	
+	private ArrayList<Card> drawPile;  //ArrayList containing cards in the draw pile
+	private ArrayList<Card> discardPile;  //ArrayList containing cards in the discard pile
+	
+	private boolean isNewDeck;  //boolean value indicating whether the deck ran out of cards and had to be re-created
+	
+	/**
+		Constructor creates a new Deck object
+	*/
 	
 	public Deck()
 	{
-		drawPile = new ArrayList<Card>();
-		discardPile = new ArrayList<Card>();
-		isNewDeck = false;
-		loadDeck();
-		shuffle(drawPile);
-		addToDiscard(removeTopDraw());
+		drawPile = new ArrayList<Card>();  //initialize a new draw pile ArrayList
+		discardPile = new ArrayList<Card>();  //initialize a new discard pile ArrayList
+		isNewDeck = false;  //initialize isNewDeck boolean value to false
+		loadDeck();  //load the cards into the draw pile
+		shuffle(drawPile);  //shuffle the draw pile
+		addToDiscard(removeTopDraw());  //place top card in draw pile into the discard pile
 	}
 			
 	/**
@@ -54,11 +60,15 @@ public class Deck
 	
 	public Card removeTopDraw()
 	{
+		//if there are no cards remaining in the draw pile, re-create the draw pile
+		//and set isNewDeck to true
+		
 		if(drawPile.size() == 0)
 		{
 			createNewDrawPile();
 			isNewDeck = true;
 		}
+		
 		return drawPile.remove(drawPile.size() - 1);
 	}
 	
@@ -134,14 +144,18 @@ public class Deck
 	
 	public void createNewDrawPile()
 	{
-		Card card;
+		Card card;  //Card object to temporarily hold a card during transfer
+		
+		//for each card in the discard pile, remove any flags, and place in draw pile
+		
 		for(int i = discardPile.size() - 1 ; i >= 0 ; i--)
 		{
 			card = discardPile.remove(i);
 			card.removeFlag();
 			drawPile.add(card);
 		}
-		shuffle(drawPile);
+		
+		shuffle(drawPile);  //shuffle the new draw pile
 	}
 	
 	/**
@@ -152,6 +166,9 @@ public class Deck
 	
 	public boolean isNewDeck()
 	{
+		//if the draw pile has recently been re-created, reset isNewDeck to false and return true
+		//otherwise return false
+	
 		if(isNewDeck)
 		{
 			isNewDeck = false;
@@ -170,19 +187,26 @@ public class Deck
 	
 	public ArrayList<Card> getAllCards()
 	{
-		ArrayList<Card> cards = new ArrayList<Card>();
-		Card card;
+		ArrayList<Card> cards = new ArrayList<Card>();  //ArrayList to hold every card in the deck
+		Card card;  //card object to temporarily hold a card during the transfer
+		
+		//for every card in the draw pile, add a copy of the card to the cards ArrayList
+		
 		for(int i = 0 ; i < drawPile.size() ; i++)
 		{
 			card = drawPile.get(i);
 			cards.add(card);
 		}
+		
+		//for every card in the discard pile, add a copy of the card to the cards ArrayList
+		
 		for(int i = 0 ; i < discardPile.size() ; i++)
 		{
 			card = discardPile.get(i);
 			cards.add(card);
 		}
-		return cards;
+		
+		return cards;  //return the cards ArrayList containing all cards currently in the deck
 	}
 		
 	/**

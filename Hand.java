@@ -1,12 +1,17 @@
 public class Hand
 {
-	public final static int NUM_CARDS = 4;
-	private Card[] cards;
+	public final static int NUM_CARDS = 4;  //the number of cards in a player's hand
+	
+	private Card[] cards;  //array containing the cards in a player's hand
+	
+	/**
+		Constructor creates a new Hand object
+	*/
 	
 	public Hand()
 	{
-		cards = new Card[NUM_CARDS];
-		initializeHand();
+		cards = new Card[NUM_CARDS];  //create a new hand array
+		initializeHand();  //initialize cards in hand array to null
 	}
 	
 	/**
@@ -15,6 +20,8 @@ public class Hand
 	
 	private void initializeHand()
 	{
+		//initialize all cards in hand array to null
+	
 		for(int i = 0 ; i < NUM_CARDS ; i++)
 		{
 			cards[i] = null;
@@ -30,9 +37,9 @@ public class Hand
 		
 	public Card swapCard(Card newCard, int index)
 	{
-		Card oldCard = cards[index];
-		cards[index] = newCard;
-		return oldCard;
+		Card oldCard = cards[index];  //the card currently stored in the index that the swap will occur
+		cards[index] = newCard;  //set the hand array at the specified index to equal the card to be added
+		return oldCard;  //return the card previously held at the specified index
 	}
 	
 	/**
@@ -53,7 +60,11 @@ public class Hand
 	
 	public int getNumPowerCards()
 	{
-		int sum = 0;
+		int sum = 0;  //total number of power cards in a player's hand
+		
+		//for every card in a player's hand, check to see if it is a power card
+		//if it is a power card, add 1 to the sum counter
+		
 		for(int i = 0 ; i < NUM_CARDS ; i++)
 		{
 			if(cards[i].isPowerCard())
@@ -61,7 +72,8 @@ public class Hand
 				sum++;
 			}
 		}
-		return sum;
+		
+		return sum;  //return the number of power cards in the player's hand
 	}
 	
 	/**
@@ -71,12 +83,16 @@ public class Hand
 	
 	public int getHandValue()
 	{
-		int sum = 0;
+		int sum = 0;  //the sum of all cards in a player's hand
+		
+		//for every card in a player's hand, retrieve its value and add to sum
+		
 		for(int i = 0 ; i < NUM_CARDS ; i++)
 		{
 			sum = sum + cards[i].getValue();
 		}
-		return sum;
+		
+		return sum;  //return the sum of all cards in the player's hand
 	}
 	
 	/**
@@ -88,6 +104,7 @@ public class Hand
 	{
 		StringBuilder hand = new StringBuilder();
 		hand.append("[");
+		
 		for(int i = 0 ; i < NUM_CARDS ; i++)
 		{
 			hand.append(cards[i]);
@@ -96,8 +113,8 @@ public class Hand
 				hand.append(", ");
 			}
 		}
+		
 		hand.append("]");
 		return hand.toString();
-
 	}
 }
